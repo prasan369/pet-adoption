@@ -919,3 +919,119 @@ body.marketplace::-webkit-scrollbar-thumb:hover { background: var(--text-muted);
 
   .mp-detail-stats { grid-template-columns: 1fr; }
 }
+
+/* ---------- Nominatim Location Search Dropdown ---------- */
+.suggestions-dropdown {
+    position: absolute;
+    background: #242526;
+    border: 1px solid #3a3b3c;
+    border-radius: 8px;
+    width: 100%;
+    z-index: 9999;
+    max-height: 220px;
+    overflow-y: auto;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    top: 100%;
+    left: 0;
+}
+
+.suggestions-dropdown:empty {
+    display: none;
+}
+
+.suggestions-dropdown::-webkit-scrollbar { width: 4px; }
+.suggestions-dropdown::-webkit-scrollbar-thumb { background: var(--bg-tertiary); border-radius: 4px; }
+
+.suggestion-item {
+    padding: 10px 14px;
+    cursor: pointer !important;
+    font-size: 0.88rem;
+    color: #e4e6eb;
+    border-bottom: 1px solid #3a3b3c;
+    line-height: 1.4;
+}
+
+.suggestion-item:last-child {
+    border-bottom: none;
+}
+
+.suggestion-item:hover {
+    background: #3a3b3c;
+    color: #ffffff;
+}
+
+.suggestion-empty {
+    color: var(--text-muted);
+    cursor: default;
+    font-style: italic;
+}
+
+.suggestion-empty:hover {
+    background: transparent;
+}
+
+/* ---------- Search & Filter Bar ---------- */
+.search-filter-bar {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin: 20px 0 28px 0;
+    flex-wrap: wrap;
+    width: 100%;
+}
+.search-box {
+    flex: 1;
+    min-width: 250px;
+    display: flex;
+    align-items: center;
+    background: #242526;
+    border: 1px solid #3a3b3c;
+    border-radius: 24px;
+    padding: 12px 18px;
+    gap: 10px;
+    transition: border-color 0.2s;
+}
+.search-box:focus-within {
+    border-color: #0866ff;
+}
+.search-box input {
+    background: none;
+    border: none;
+    outline: none;
+    color: #e4e6eb;
+    font-size: 0.95rem;
+    width: 100%;
+}
+.search-box input::placeholder {
+    color: #8a8d91;
+}
+.search-filter-bar select {
+    background: #242526;
+    border: 1px solid #3a3b3c;
+    border-radius: 24px;
+    color: #e4e6eb;
+    padding: 12px 18px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+    padding-right: 32px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238a8d91' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    transition: border-color 0.2s;
+}
+.search-filter-bar select:hover,
+.search-filter-bar select:focus {
+    border-color: #0866ff;
+}
+@media (max-width: 600px) {
+    .search-filter-bar {
+        flex-direction: column;
+    }
+    .search-box,
+    .search-filter-bar select {
+        width: 100%;
+    }
+}

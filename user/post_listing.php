@@ -22,15 +22,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $old['breed']       = $breed       = trim($_POST['breed']       ?? '');
     $old['age']         = $age         = (int)($_POST['age']        ?? 0);
     $old['gender']      = $gender      = trim($_POST['gender']      ?? '');
-    $old['city']        = $city        = trim($_POST['city']        ?? '');
+    $old['area']        = $area        = trim($_POST['area']        ?? '');
     $old['description'] = $description = trim($_POST['description'] ?? '');
+
+    // Safely cast coordinates — never insert raw strings
+    $latitude  = isset($_POST['latitude'])  && $_POST['latitude']  !== '' ? (float)$_POST['latitude']  : null;
+    $longitude = isset($_POST['longitude']) && $_POST['longitude'] !== '' ? (float)$_POST['longitude'] : null;
+
+    // Validate coordinate ranges
+    if ($latitude !== null && ($latitude < -90 || $latitude > 90))   { $latitude = null; }
+    if ($longitude !== null && ($longitude < -180 || $longitude > 180)) { $longitude = null; }
 
     // Validate required text fields
     if ($name === '')        $errors[] = 'Dog name is required.';
     if ($breed === '')       $errors[] = 'Breed is required.';
     if ($age < 0 || $age > 30) $errors[] = 'Age must be between 0 and 30.';
     if (!in_array($gender, ['male', 'female'], true)) $errors[] = 'Select a valid gender.';
-    if ($city === '')        $errors[] = 'City is required.';
+    if ($area === '')        $errors[] = 'Please select a location from the suggestions.';
+    if ($latitude === null || $longitude === null) $errors[] = 'Please select a location from the suggestions.';
     if ($description === '') $errors[] = 'Description is required.';
 
     // Validate photos
@@ -87,11 +96,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Insert pet
             $stmt = $pdo->prepare(
-                "INSERT INTO pets (name, type, breed, age, gender, description, location, owner_id, status)
-                 VALUES (?, 'Dog', ?, ?, ?, ?, ?, ?, 'active')"
+                "INSERT INTO pets (name, type, breed, age, gender, description, location, area, latitude, longitude, owner_id, status)
+                 VALUES (?, 'Dog', ?, ?, ?, ?, ?, ?, ?, ?, ?, 'active')"
             );
             $owner_id = $_SESSION['user_id'];
-            $stmt->execute([$name, $breed, $age, $gender, $description, $city, $owner_id]);
+            $stmt->execute([$name, $breed, $age, $gender, $description, $area, $area, $latitude, $longitude, $owner_id]);
             $pet_id = (int)$pdo->lastInsertId();
 
             // Insert photos
@@ -132,7 +141,9 @@ $user = get_user_by_id($_SESSION['user_id']);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Post a Dog — PawMarket</title>
     <meta name="description" content="List your dog for adoption on PawMarket.">
-    <link rel="stylesheet" href="../css/marketplace.css">
+    <link rel="stylesheet" href="../css/marketplace.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body class="marketplace">
 
@@ -206,9 +217,20 @@ $user = get_user_by_id($_SESSION['user_id']);
                     </div>
 
                     <div class="mp-form-group">
-                        <label for="dogCity">City</label>
-                        <input type="text" id="dogCity" name="city" placeholder="e.g. Kathmandu"
-                               value="<?php echo htmlspecialchars($old['city'] ?? ''); ?>" required>
+                        <label for="area-search">Area / Neighbourhood</label>
+                        <div style="position:relative;">
+                            <input type="text"
+                                   id="area-search"
+                                   placeholder="Search your location e.g. Thamel, Kathmandu"
+                                   autocomplete="off"
+                                   value="<?php echo htmlspecialchars($old['area'] ?? ''); ?>">
+                            <div id="suggestions" class="suggestions-dropdown"></div>
+                        </div>
+                        <input type="hidden" name="area"      id="area"      value="<?php echo htmlspecialchars($old['area'] ?? ''); ?>">
+                        <input type="hidden" name="latitude"  id="latitude"  value="<?php echo htmlspecialchars($_POST['latitude']  ?? ''); ?>">
+                        <input type="hidden" name="longitude" id="longitude" value="<?php echo htmlspecialchars($_POST['longitude'] ?? ''); ?>">
+                        <div id="location-map" style="height:300px;border-radius:10px;margin-top:10px;border:1px solid var(--border);"></div>
+                        <p style="font-size:0.75rem;color:var(--text-muted);margin-top:6px;">📍 Search for your area above, then drag the pin to fine-tune</p>
                     </div>
 
                     <div class="mp-form-group">
@@ -236,6 +258,149 @@ $user = get_user_by_id($_SESSION['user_id']);
         </div>
     </main>
 
-    <script src="../js/marketplace.js"></script>
+    <script src="../js/marketplace.js?v=<?php echo time(); ?>"></script>
+    <script>
+    (function () {
+        /* ---- Map setup ---- */
+        const map = L.map('location-map').setView([27.7172, 85.3240], 12);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        let marker = null;
+
+        /* Restore pin on re-render (form error) */
+        const savedLat = document.getElementById('latitude').value;
+        const savedLng = document.getElementById('longitude').value;
+        if (savedLat && savedLng) {
+            const ll = L.latLng(parseFloat(savedLat), parseFloat(savedLng));
+            marker = L.marker(ll, { draggable: true }).addTo(map);
+            map.setView(ll, 15);
+            marker.on('dragend', syncMarkerCoords);
+        }
+
+        function syncMarkerCoords() {
+            const pos = marker.getLatLng();
+            document.getElementById('latitude').value  = pos.lat;
+            document.getElementById('longitude').value = pos.lng;
+        }
+
+        function placePin(latlng) {
+            if (marker) {
+                marker.setLatLng(latlng);
+            } else {
+                marker = L.marker(latlng, { draggable: true }).addTo(map);
+                marker.on('dragend', syncMarkerCoords);
+            }
+            document.getElementById('latitude').value  = latlng.lat;
+            document.getElementById('longitude').value = latlng.lng;
+        }
+
+        /* ---- Nominatim search ---- */
+        const searchInput   = document.getElementById('area-search');
+        const suggestionBox = document.getElementById('suggestions');
+        const hiddenArea    = document.getElementById('area');
+        let debounceTimer   = null;
+
+        searchInput.addEventListener('input', function () {
+            clearTimeout(debounceTimer);
+            const query = this.value.trim();
+
+            /* Clear hidden area so validation fires if user edits after picking */
+            hiddenArea.value = '';
+            document.getElementById('latitude').value  = '';
+            document.getElementById('longitude').value = '';
+
+            if (query.length < 3) { suggestionBox.innerHTML = ''; return; }
+
+            debounceTimer = setTimeout(async () => {
+                try {
+                    const url = 'https://nominatim.openstreetmap.org/search?'
+                        + new URLSearchParams({ q: query, format: 'json', limit: 5, countrycodes: 'np' });
+                    const res  = await fetch(url, { headers: { 'Accept-Language': 'en' } });
+                    const data = await res.json();
+
+                    suggestionBox.innerHTML = '';
+
+                    if (data.length === 0) {
+                        const none = document.createElement('div');
+                        none.className   = 'suggestion-item suggestion-empty';
+                        none.textContent = 'No results found in Nepal';
+                        suggestionBox.appendChild(none);
+                        return;
+                    }
+
+                    data.forEach(place => {
+                        const div        = document.createElement('div');
+                        div.className    = 'suggestion-item';
+
+                        // Show short name: just first 3 parts of display_name
+                        const parts = place.display_name.split(',');
+                        const shortName = parts.slice(0, 3).join(',').trim();
+
+                        div.textContent  = shortName;
+                        div.title        = place.display_name; // full name on hover tooltip
+
+                        div.addEventListener('click', () => {
+                            const latlng = L.latLng(parseFloat(place.lat), parseFloat(place.lon));
+                            map.setView(latlng, 15);
+                            placePin(latlng);
+
+                            /* Populate visible + hidden inputs */
+                            searchInput.value  = shortName;
+                            hiddenArea.value   = shortName;
+
+                            /* Close dropdown */
+                            suggestionBox.innerHTML = '';
+                        });
+                        suggestionBox.appendChild(div);
+                    });
+                } catch (err) {
+                    console.warn('Nominatim error:', err);
+                }
+            }, 300);
+        });
+
+        /* Close dropdown when clicking outside */
+        document.addEventListener('click', e => {
+            if (!searchInput.contains(e.target) && !suggestionBox.contains(e.target)) {
+                suggestionBox.innerHTML = '';
+            }
+        });
+
+        /* ---- Client-side form validation ---- */
+        document.getElementById('postForm').addEventListener('submit', function (e) {
+            const lat = document.getElementById('latitude').value;
+            const lng = document.getElementById('longitude').value;
+            const area = hiddenArea.value.trim();
+
+            if (!lat || !lng || !area) {
+                e.preventDefault();
+                /* Scroll to the search input and show an inline error */
+                searchInput.focus();
+                searchInput.style.borderColor = '#F02849';
+                searchInput.style.boxShadow   = '0 0 0 3px rgba(240,40,73,0.2)';
+
+                let errMsg = document.getElementById('location-error');
+                if (!errMsg) {
+                    errMsg           = document.createElement('p');
+                    errMsg.id        = 'location-error';
+                    errMsg.style.cssText = 'color:#F02849;font-size:0.82rem;margin-top:6px;';
+                    searchInput.parentElement.insertAdjacentElement('afterend', errMsg);
+                }
+                errMsg.textContent = '⚠️ Please select a location from the suggestions.';
+                searchInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        });
+
+        /* Clear error styling once user starts searching again */
+        searchInput.addEventListener('focus', function () {
+            this.style.borderColor = '';
+            this.style.boxShadow   = '';
+            const errMsg = document.getElementById('location-error');
+            if (errMsg) errMsg.remove();
+        });
+    })();
+    </script>
 </body>
 </html>

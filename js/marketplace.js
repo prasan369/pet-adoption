@@ -22,45 +22,59 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ---------- City Filter Pills ----------
-  const pills = document.querySelectorAll('.mp-pill');
-  const cards  = document.querySelectorAll('.mp-card[data-city]');
+  // ---------- Search & Filter Logic ----------
+  function filterDogs() {
+      const search = document.getElementById('dog-search').value.toLowerCase();
+      const age = document.getElementById('filter-age').value;
+      const gender = document.getElementById('filter-gender').value;
 
-  pills.forEach(pill => {
-    pill.addEventListener('click', () => {
-      // Toggle active state
-      pills.forEach(p => p.classList.remove('active'));
-      pill.classList.add('active');
+      document.querySelectorAll('.mp-card').forEach(card => {
+          const name = card.dataset.name || '';
+          const breed = card.dataset.breed || '';
+          const area = card.dataset.area || '';
+          const cardAge = parseInt(card.dataset.age);
+          const cardGender = card.dataset.gender || '';
 
-      const city = pill.dataset.city || '';
+          const matchSearch = !search ||
+              name.includes(search) ||
+              breed.includes(search) ||
+              area.includes(search);
 
-      cards.forEach(card => {
-        if (!city || card.dataset.city === city) {
-          card.style.display = '';
-        } else {
-          card.style.display = 'none';
-        }
+          const matchAge = !age ||
+              (age === 'puppy' && cardAge <= 1) ||
+              (age === 'young' && cardAge > 1 && cardAge <= 3) ||
+              (age === 'adult' && cardAge > 3);
+
+          const matchGender = !gender || cardGender === gender;
+
+          card.style.display = (matchSearch && matchAge && matchGender) ? 'block' : 'none';
       });
 
       // Show/hide empty state
       const grid = document.querySelector('.mp-grid');
       if (grid) {
-        const visibleCards = grid.querySelectorAll('.mp-card:not([style*="display: none"])');
-        let emptyEl = grid.querySelector('.mp-empty');
-        if (visibleCards.length === 0) {
-          if (!emptyEl) {
-            emptyEl = document.createElement('div');
-            emptyEl.className = 'mp-empty';
-            emptyEl.innerHTML = '<span class="mp-empty-icon">🔍</span><p>No dogs found in this city.</p>';
-            grid.appendChild(emptyEl);
+          const visibleCards = grid.querySelectorAll('.mp-card:not([style*="display: none"])');
+          let emptyEl = grid.querySelector('.mp-empty');
+          if (visibleCards.length === 0) {
+              if (!emptyEl) {
+                  emptyEl = document.createElement('div');
+                  emptyEl.className = 'mp-empty';
+                  emptyEl.innerHTML = '<span class="mp-empty-icon">🔍</span><p>No dogs match your search criteria.</p>';
+                  grid.appendChild(emptyEl);
+              }
+              emptyEl.style.display = '';
+          } else if (emptyEl) {
+              emptyEl.style.display = 'none';
           }
-          emptyEl.style.display = '';
-        } else if (emptyEl) {
-          emptyEl.style.display = 'none';
-        }
       }
-    });
-  });
+  }
+
+  const searchInputEl = document.getElementById('dog-search');
+  if (searchInputEl) {
+      searchInputEl.addEventListener('input', filterDogs);
+      document.getElementById('filter-age').addEventListener('change', filterDogs);
+      document.getElementById('filter-gender').addEventListener('change', filterDogs);
+  }
 
   // ---------- Photo Gallery (Pet Detail) ----------
   const mainImg = document.getElementById('galleryMain');

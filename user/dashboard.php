@@ -12,7 +12,7 @@ $user = get_user_by_id($_SESSION['user_id']);
 
 // --- Fetch active dogs with primary photo ---
 $stmt = $pdo->prepare("
-    SELECT p.id, p.name, p.breed, p.location AS city, pp.photo_path
+    SELECT p.id, p.name, p.breed, p.area, p.location AS city, p.age, p.gender, pp.photo_path
     FROM pets p
     LEFT JOIN pet_photos pp ON p.id = pp.pet_id AND pp.is_primary = 1
     WHERE p.status = 'active'
@@ -20,16 +20,6 @@ $stmt = $pdo->prepare("
 ");
 $stmt->execute();
 $pets = $stmt->fetchAll();
-
-// --- Fetch distinct cities for filter pills ---
-$city_stmt = $pdo->prepare("
-    SELECT DISTINCT p.location AS city
-    FROM pets p
-    WHERE p.status = 'active' AND p.location IS NOT NULL AND p.location != ''
-    ORDER BY p.location ASC
-");
-$city_stmt->execute();
-$cities = $city_stmt->fetchAll(PDO::FETCH_COLUMN);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -38,7 +28,7 @@ $cities = $city_stmt->fetchAll(PDO::FETCH_COLUMN);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Browse Dogs — PawMarket</title>
     <meta name="description" content="Find dogs available for adoption near you on PawMarket.">
-    <link rel="stylesheet" href="../css/marketplace.css">
+    <link rel="stylesheet" href="../css/marketplace.css?v=<?php echo time(); ?>">
 </head>
 <body class="marketplace">
 
@@ -77,17 +67,24 @@ $cities = $city_stmt->fetchAll(PDO::FETCH_COLUMN);
             <?php unset($_SESSION['success']); ?>
         <?php endif; ?>
 
-        <!-- City Filter Pills -->
-        <?php if (!empty($cities)): ?>
-        <div class="mp-filters">
-            <button class="mp-pill active" data-city="">All Cities</button>
-            <?php foreach ($cities as $c): ?>
-                <button class="mp-pill" data-city="<?php echo htmlspecialchars($c); ?>">
-                    📍 <?php echo htmlspecialchars($c); ?>
-                </button>
-            <?php endforeach; ?>
+        <!-- Search & Filter Bar -->
+        <div class="search-filter-bar">
+            <div class="search-box">
+                <span>🔍</span>
+                <input type="text" id="dog-search" placeholder="Search by name, breed or area...">
+            </div>
+            <select id="filter-age">
+                <option value="">All Ages</option>
+                <option value="puppy">Puppy (0-1 yr)</option>
+                <option value="young">Young (1-3 yr)</option>
+                <option value="adult">Adult (3+ yr)</option>
+            </select>
+            <select id="filter-gender">
+                <option value="">All Genders</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+            </select>
         </div>
-        <?php endif; ?>
 
         <!-- Pet Grid -->
         <div class="mp-grid">
@@ -100,7 +97,11 @@ $cities = $city_stmt->fetchAll(PDO::FETCH_COLUMN);
                 <?php foreach ($pets as $pet): ?>
                     <a href="pet_detail.php?id=<?php echo (int)$pet['id']; ?>"
                        class="mp-card"
-                       data-city="<?php echo htmlspecialchars($pet['city'] ?? ''); ?>">
+                       data-name="<?php echo htmlspecialchars(strtolower($pet['name'])); ?>"
+                       data-breed="<?php echo htmlspecialchars(strtolower($pet['breed'])); ?>"
+                       data-area="<?php echo htmlspecialchars(strtolower($pet['area'] ?? $pet['city'] ?? '')); ?>"
+                       data-age="<?php echo (int)$pet['age']; ?>"
+                       data-gender="<?php echo htmlspecialchars(strtolower($pet['gender'] ?? '')); ?>">
 
                         <div class="mp-card-img">
                             <?php if (!empty($pet['photo_path'])): ?>
@@ -115,8 +116,9 @@ $cities = $city_stmt->fetchAll(PDO::FETCH_COLUMN);
                         <div class="mp-card-body">
                             <div class="mp-card-name"><?php echo htmlspecialchars($pet['name']); ?></div>
                             <div class="mp-card-breed"><?php echo htmlspecialchars($pet['breed']); ?></div>
-                            <?php if (!empty($pet['city'])): ?>
-                                <div class="mp-card-city"><?php echo htmlspecialchars($pet['city']); ?></div>
+                            <?php $displayArea = $pet['area'] ?? $pet['city'] ?? ''; ?>
+                            <?php if (!empty($displayArea)): ?>
+                                <div class="mp-card-city"><?php echo htmlspecialchars($displayArea); ?></div>
                             <?php endif; ?>
                         </div>
                     </a>
@@ -126,6 +128,6 @@ $cities = $city_stmt->fetchAll(PDO::FETCH_COLUMN);
 
     </main>
 
-    <script src="../js/marketplace.js"></script>
+    <script src="../js/marketplace.js?v=<?php echo time(); ?>"></script>
 </body>
 </html>

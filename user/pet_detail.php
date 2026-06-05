@@ -60,8 +60,10 @@ $initials = mb_substr($initials, 0, 2);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars($pet['name']); ?> — PawMarket</title>
-    <meta name="description" content="<?php echo htmlspecialchars($pet['breed'] . ' available for adoption in ' . ($pet['location'] ?? '')); ?>">
-    <link rel="stylesheet" href="../css/marketplace.css">
+    <meta name="description" content="<?php echo htmlspecialchars($pet['breed'] . ' available for adoption in ' . ($pet['area'] ?? $pet['location'] ?? '')); ?>">
+    <link rel="stylesheet" href="../css/marketplace.css?v=<?php echo time(); ?>">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body class="marketplace">
 
@@ -148,8 +150,8 @@ $initials = mb_substr($initials, 0, 2);
                             <div class="mp-stat-value"><?php echo htmlspecialchars(ucfirst($pet['gender'])); ?></div>
                         </div>
                         <div class="mp-stat">
-                            <div class="mp-stat-label">City</div>
-                            <div class="mp-stat-value"><?php echo htmlspecialchars($pet['location'] ?? '—'); ?></div>
+                            <div class="mp-stat-label">Area</div>
+                            <div class="mp-stat-value"><?php echo htmlspecialchars($pet['area'] ?? $pet['location'] ?? '—'); ?></div>
                         </div>
                         <div class="mp-stat">
                             <div class="mp-stat-label">Listed</div>
@@ -161,6 +163,17 @@ $initials = mb_substr($initials, 0, 2);
                         <h3>About <?php echo htmlspecialchars($pet['name']); ?></h3>
                         <p><?php echo nl2br(htmlspecialchars($pet['description'])); ?></p>
                     </div>
+
+                    <?php if (!empty($pet['latitude']) && !empty($pet['longitude'])): ?>
+                    <div style="margin-top:1.5rem;">
+                        <h3 style="margin-bottom:0.5rem;font-size:0.95rem;">📍 Location</h3>
+                        <div id="detail-map" style="height:250px;border-radius:10px;border:1px solid var(--mp-border);"></div>
+                    </div>
+                    <?php elseif (!empty($pet['area'])): ?>
+                    <div style="margin-top:1rem;font-size:0.9rem;color:var(--mp-muted);">
+                        📍 <?php echo htmlspecialchars($pet['area']); ?>
+                    </div>
+                    <?php endif; ?>
                 </div>
 
                 <!-- Owner card -->
@@ -202,6 +215,22 @@ $initials = mb_substr($initials, 0, 2);
         </div>
     </main>
 
-    <script src="../js/marketplace.js"></script>
+    <script src="../js/marketplace.js?v=<?php echo time(); ?>"></script>
+    <?php if (!empty($pet['latitude']) && !empty($pet['longitude'])): ?>
+    <script>
+    (function () {
+        const lat = <?php echo (float)$pet['latitude']; ?>;
+        const lng = <?php echo (float)$pet['longitude']; ?>;
+        const map = L.map('detail-map').setView([lat, lng], 14);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+        L.marker([lat, lng])
+         .addTo(map)
+         .bindPopup('<?php echo addslashes(htmlspecialchars($pet["name"])); ?> is near here')
+         .openPopup();
+    })();
+    </script>
+    <?php endif; ?>
 </body>
 </html>

@@ -131,7 +131,6 @@ $my_pets = $stmt->fetchAll();
             </button>
             <ul class="mp-nav-links">
                 <li><a href="dashboard.php">Browse Dogs</a></li>
-                <li><a href="my_requests.php">My Requests</a></li>
                 <li><a href="my_listings.php" class="active">My Listings</a></li>
                 <li><a href="messages.php">Messages</a></li>
                 <li><a href="post_listing.php" class="mp-nav-cta">+ Post a Dog</a></li>

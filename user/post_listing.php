@@ -145,7 +145,6 @@ $user = get_user_by_id($_SESSION['user_id']);
             </button>
             <ul class="mp-nav-links">
                 <li><a href="dashboard.php">Browse Dogs</a></li>
-                <li><a href="my_requests.php">My Requests</a></li>
                 <li><a href="my_listings.php">My Listings</a></li>
                 <li><a href="messages.php">Messages</a></li>
                 <li><a href="post_listing.php" class="mp-nav-cta active">+ Post a Dog</a></li>

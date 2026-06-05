@@ -74,7 +74,6 @@ $initials = mb_substr($initials, 0, 2);
             </button>
             <ul class="mp-nav-links">
                 <li><a href="dashboard.php">Browse Dogs</a></li>
-                <li><a href="my_requests.php">My Requests</a></li>
                 <li><a href="my_listings.php">My Listings</a></li>
                 <li><a href="messages.php">Messages</a></li>
                 <li><a href="post_listing.php" class="mp-nav-cta">+ Post a Dog</a></li>
@@ -180,7 +179,7 @@ $initials = mb_substr($initials, 0, 2);
                 <!-- Action buttons -->
                 <div class="mp-detail-card">
                     <div class="mp-actions">
-                        <a href="messages.php?to=<?php echo (int)$pet['owner_user_id']; ?>"
+                        <a href="messages.php?to=<?php echo (int)$pet['owner_user_id']; ?>&amp;pet_id=<?php echo (int)$pet['id']; ?>"
                            class="mp-btn mp-btn-primary">
                             💬 Message Owner
                         </a>

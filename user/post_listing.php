@@ -139,8 +139,8 @@ $user = get_user_by_id($_SESSION['user_id']);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Post a Dog — PawMarket</title>
-    <meta name="description" content="List your dog for adoption on PawMarket.">
+    <title>Post a Dog — Pet Adoption</title>
+    <meta name="description" content="List your dog for adoption on Pet Adoption.">
     <link rel="stylesheet" href="../css/marketplace.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -150,7 +150,7 @@ $user = get_user_by_id($_SESSION['user_id']);
     <!-- Navigation -->
     <nav class="mp-nav">
         <div class="mp-nav-inner">
-            <a href="dashboard.php" class="mp-logo">🐾 Paw<span>Market</span></a>
+            <a href="dashboard.php" class="mp-logo">🐾 Pet<span>Adoption</span></a>
             <button class="mp-hamburger" aria-label="Toggle menu">
                 <span></span><span></span><span></span>
             </button>

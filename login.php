@@ -17,13 +17,13 @@ if (isset($_SESSION['success'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pet Adoption - Login</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css?v=<?php echo time(); ?>">
 </head>
 <body class="login-page">
     <div class="login-container">
         <div class="login-card">
             <div class="login-header">
-                <h1>🐾 Pet Adoption</h1>
+                <h1>🐾 Pet <span>Adoption</span></h1>
                 <p>Find Your Perfect Pet</p>
             </div>
             
@@ -48,7 +48,7 @@ if (isset($_SESSION['success'])) {
             </form>
             
             <div class="login-footer">
-                <p style="font-size: 0.95em; margin: 0;">Don't have an account? <a href="register.php" style="color: #667eea; text-decoration: none; font-weight: 600;">Sign Up</a></p>
+                <p style="font-size: 0.95em; margin: 0;">Don't have an account? <a href="register.php" style="color: #0866ff; text-decoration: none; font-weight: 600;">Sign Up</a></p>
             </div>
         </div>
     </div>

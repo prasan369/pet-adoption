@@ -53,8 +53,8 @@ $my_pets = $stmt->fetchAll();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Listings — PawMarket</title>
-    <meta name="description" content="Manage your dog listings on PawMarket.">
+    <title>My Listings — Pet Adoption</title>
+    <meta name="description" content="Manage your dog listings on Pet Adoption.">
     <link rel="stylesheet" href="../css/marketplace.css">
     <style>
         .mp-listing-card {
@@ -125,7 +125,7 @@ $my_pets = $stmt->fetchAll();
     <!-- Navigation -->
     <nav class="mp-nav">
         <div class="mp-nav-inner">
-            <a href="dashboard.php" class="mp-logo">🐾 Paw<span>Market</span></a>
+            <a href="dashboard.php" class="mp-logo">🐾 Pet<span>Adoption</span></a>
             <button class="mp-hamburger" aria-label="Toggle menu">
                 <span></span><span></span><span></span>
             </button>

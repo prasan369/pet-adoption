@@ -1,5 +1,5 @@
 /* ============================================
-   PawMarket — Facebook Marketplace Dark Theme
+   Pet Adoption — Facebook Marketplace Dark Theme
    ============================================ */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
@@ -1034,4 +1034,110 @@ body.marketplace::-webkit-scrollbar-thumb:hover { background: var(--text-muted);
     .search-filter-bar select {
         width: 100%;
     }
+}
+
+/* ---------- Profile Page ---------- */
+.mp-profile-wrapper {
+    display: flex;
+    justify-content: center;
+    padding: 40px 16px;
+}
+
+.mp-profile-card {
+    width: 100%;
+    max-width: 560px;
+    background: #242526;
+    border-radius: 16px;
+    padding: 40px;
+}
+
+.mp-profile-header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.mp-profile-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: #0866ff;
+    color: #fff;
+    font-size: 2rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px auto;
+}
+
+.mp-profile-names {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.mp-profile-email {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.mp-profile-form-group {
+    margin-bottom: 20px;
+}
+
+.mp-profile-form-group label {
+    display: block;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    color: #8a8d91;
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+
+.mp-profile-form-group input {
+    width: 100%;
+    background: #3a3b3c;
+    border: 1px solid #4a4b4c;
+    border-radius: 10px;
+    color: #e4e6eb;
+    padding: 12px 16px;
+    outline: none;
+    font-family: var(--font);
+    font-size: 0.95rem;
+    transition: border-color 0.2s;
+}
+
+.mp-profile-form-group input:focus {
+    border-color: #0866ff;
+}
+
+.mp-btn-profile {
+    width: 100%;
+    background: #0866ff;
+    color: white;
+    border-radius: 10px;
+    padding: 14px;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+    font-family: var(--font);
+    margin-top: 10px;
+}
+
+.mp-btn-profile:hover {
+    background: #0757d1;
+}
+
+.mp-profile-alert {
+    border-radius: 50px;
+    padding: 12px 20px;
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
 }

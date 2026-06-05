@@ -12,13 +12,13 @@ if (isset($_SESSION['error'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pet Adoption - Sign Up</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css?v=<?php echo time(); ?>">
 </head>
 <body class="login-page">
     <div class="login-container" style="max-width: 450px;">
         <div class="login-card" style="padding: 30px 40px;">
             <div class="login-header">
-                <h1>🐾 Sign Up</h1>
+                <h1>🐾 Pet <span>Adoption</span></h1>
                 <p>Find & Adopt Your Perfect Pet Partner</p>
             </div>
             
@@ -54,7 +54,7 @@ if (isset($_SESSION['error'])) {
             </form>
             
             <div class="login-footer">
-                <p>Already have an account? <a href="login.php" style="color: #667eea; text-decoration: none; font-weight: 600;">Login</a></p>
+                <p>Already have an account? <a href="login.php" style="color: #0866ff; text-decoration: none; font-weight: 600;">Login</a></p>
             </div>
         </div>
     </div>

@@ -59,7 +59,7 @@ $initials = mb_substr($initials, 0, 2);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo htmlspecialchars($pet['name']); ?> — PawMarket</title>
+    <title><?php echo htmlspecialchars($pet['name']); ?> — Pet Adoption</title>
     <meta name="description" content="<?php echo htmlspecialchars($pet['breed'] . ' available for adoption in ' . ($pet['area'] ?? $pet['location'] ?? '')); ?>">
     <link rel="stylesheet" href="../css/marketplace.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
@@ -70,7 +70,7 @@ $initials = mb_substr($initials, 0, 2);
     <!-- Navigation -->
     <nav class="mp-nav">
         <div class="mp-nav-inner">
-            <a href="dashboard.php" class="mp-logo">🐾 Paw<span>Market</span></a>
+            <a href="dashboard.php" class="mp-logo">🐾 Pet<span>Adoption</span></a>
             <button class="mp-hamburger" aria-label="Toggle menu">
                 <span></span><span></span><span></span>
             </button>

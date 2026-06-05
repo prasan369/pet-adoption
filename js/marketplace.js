@@ -1,5 +1,5 @@
 /* ============================================
-   PawMarket — Client-side Logic
+   Pet Adoption — Client-side Logic
    ============================================ */
 document.addEventListener('DOMContentLoaded', () => {
 

@@ -32,7 +32,7 @@ $my_requests = $result->fetch_all(MYSQLI_ASSOC);
     <!-- Navigation -->
     <nav class="mp-nav">
         <div class="mp-nav-inner">
-            <a href="dashboard.php" class="mp-logo">🐾 Paw<span>Market</span></a>
+            <a href="dashboard.php" class="mp-logo">🐾 Pet<span>Adoption</span></a>
             <button class="mp-hamburger" aria-label="Toggle menu">
                 <span></span><span></span><span></span>
             </button>

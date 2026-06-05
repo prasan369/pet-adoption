@@ -12,7 +12,7 @@ body {
 
 /* Login Page */
 .login-page {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #18191A;
     min-height: 100vh;
     display: flex;
     align-items: center;
@@ -26,9 +26,9 @@ body {
 }
 
 .login-card {
-    background: white;
+    background: #242526;
     border-radius: 10px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
     padding: 40px;
 }
 
@@ -39,12 +39,16 @@ body {
 
 .login-header h1 {
     font-size: 2.5em;
-    color: #667eea;
+    color: #ffffff;
     margin-bottom: 10px;
 }
 
+.login-header h1 span {
+    color: #0866ff;
+}
+
 .login-header p {
-    color: #666;
+    color: #8a8d91;
     font-size: 0.95em;
 }
 
@@ -56,7 +60,7 @@ body {
     display: block;
     margin-bottom: 8px;
     font-weight: 600;
-    color: #333;
+    color: #e4e6eb;
 }
 
 .form-group input,
@@ -64,7 +68,9 @@ body {
 .form-group textarea {
     width: 100%;
     padding: 12px;
-    border: 1px solid #ddd;
+    background: #3a3b3c;
+    border: 1px solid #4a4b4c;
+    color: #e4e6eb;
     border-radius: 5px;
     font-size: 1em;
     transition: border-color 0.3s;
@@ -74,8 +80,8 @@ body {
 .form-group select:focus,
 .form-group textarea:focus {
     outline: none;
-    border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    border-color: #0866ff;
+    box-shadow: none;
 }
 
 .btn {
@@ -90,16 +96,16 @@ body {
 }
 
 .btn-primary {
-    background: #667eea;
+    background: #0866ff;
     color: white;
     width: 100%;
     font-weight: 600;
 }
 
 .btn-primary:hover {
-    background: #5568d3;
+    background: #0757d1;
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 5px 15px rgba(8, 102, 255, 0.3);
 }
 
 .btn-secondary {

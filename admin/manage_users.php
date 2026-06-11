@@ -32,8 +32,7 @@ $users = $result->fetch_all(MYSQLI_ASSOC);
                 <li><a href="dashboard.php">Dashboard</a></li>
                 <li><a href="manage_pets.php">Manage Pets</a></li>
                 <li><a href="manage_users.php" class="active">Manage Users</a></li>
-                <li><a href="adoption_requests.php">Adoption Requests</a></li>
-                <li><a href="messages.php">Messages</a></li>
+                <li><a href="reports.php">Reports</a></li>
                 <li><a href="profile.php">Profile</a></li>
                 <li><a href="../logout.php" class="logout-link">Logout</a></li>
             </ul>

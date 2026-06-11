@@ -158,7 +158,8 @@
 .pets-table,
 .users-table,
 .requests-table,
-.messages-table {
+.messages-table,
+.admin-table {
     width: 100%;
     border-collapse: collapse;
     font-size: 0.95em;
@@ -167,14 +168,16 @@
 .pets-table thead,
 .users-table thead,
 .requests-table thead,
-.messages-table thead {
+.messages-table thead,
+.admin-table thead {
     background: #f8f9fa;
 }
 
 .pets-table th,
 .users-table th,
 .requests-table th,
-.messages-table th {
+.messages-table th,
+.admin-table th {
     padding: 15px;
     text-align: left;
     font-weight: 600;
@@ -185,7 +188,8 @@
 .pets-table td,
 .users-table td,
 .requests-table td,
-.messages-table td {
+.messages-table td,
+.admin-table td {
     padding: 15px;
     border-bottom: 1px solid #e0e0e0;
 }
@@ -193,7 +197,8 @@
 .pets-table tbody tr:hover,
 .users-table tbody tr:hover,
 .requests-table tbody tr:hover,
-.messages-table tbody tr:hover {
+.messages-table tbody tr:hover,
+.admin-table tbody tr:hover {
     background: #f8f9fa;
 }
 
